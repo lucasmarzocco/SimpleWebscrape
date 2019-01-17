@@ -9,6 +9,7 @@ import (
 	"strings"
 )
 
+//Struct to store the result of fetching a name
 type Name struct {
 	Name string
 	Surname string
@@ -16,6 +17,7 @@ type Name struct {
 	Region string
 }
 
+//Struct to store the result of fetching a joke
 type ChuckNorris struct {
 	Type string
 	Value struct {
@@ -25,6 +27,7 @@ type ChuckNorris struct {
 	}
 }
 
+//HTTP get to retrieve the data from the given links
 func get(link string) []byte {
 
 	response, err := http.Get(link)
@@ -41,7 +44,6 @@ func get(link string) []byte {
 			os.Exit(1)
 		}
 
-		//fmt.Println(string(contents))
 		return contents
 	}
 
@@ -49,6 +51,7 @@ func get(link string) []byte {
 	return slice
 }
 
+//Main method, does all the heavy lifting
 func Main() string {
 
 	names := "http://uinames.com/api/"
@@ -84,9 +87,6 @@ func Main() string {
 
 	//Replaced joke
 	result := strings.Replace(joke, "John Doe", name + " " + surname, -1)
-
 	return result + "."
-
 	/**************************************************************/
-
 }

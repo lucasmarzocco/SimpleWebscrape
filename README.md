@@ -1,11 +1,16 @@
 README
 
 Created by: Lucas Marzocco
-Took (Approx): 3 hours
+
+Email: lucasmarzocco@gmail.com
+
+Took (Approx.): 3 hours
+
 Language: Go
+
 Webserver tool: Swagger
 
-Make sure to have Swagger installed as well as all of the packages required and the apple_proj folder in the SRC folder of your go installation.
+Make sure to have Swagger installed as well as all of the packages required and the apple_proj folder in the SRC folder of your Go installation.
 
 To run:
 
@@ -18,6 +23,8 @@ To run:
 	curl http://127.0.0.1:59987/joke [EXAMPLE]
 
 	It will output a new joke as per the requirements.
+
+If any more explanation or help is needed to get this running, please contact me.
 
 
 
