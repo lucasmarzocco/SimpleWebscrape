@@ -1,0 +1,17 @@
+swagger: "2.0"
+info:
+  title: Apple Take Home Project
+  description: Take home project for Apple job
+  version: "0.0.1"
+schemes:
+  - http
+paths:
+  /joke:
+    get:
+      summary: Get a newly made joke
+      description: Get a newly made joke
+      responses:
+        200:
+          description: A new joke with a new name
+          schema:
+            type: string
