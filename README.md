@@ -22,16 +22,19 @@ To run:
 3) Take the local server output and add "/joke" (I just decided to have a specific endpoint).
 4) In another window use the curl command:
 	
+```
 	curl http://127.0.0.1:59987/joke [EXAMPLE]
+```
 
-	It will output a new joke as per the requirements.
-
-If any more explanation or help is needed to get this running, please contact me.
+It will output a new joke as per the requirements.
 
 
+```
 Tests done using Vegeta (https://thisdata.com/blog/load-testing-api-interfaces-with-go-and-vegeta/):
 Performance drops a little when there are 70 requests per second but isn't significant until you hit around 100 requests per second.
+```
 
+```
 MacBookPro:~ lucasmarzocco$ echo "GET http://127.0.0.1:51115/joke" | vegeta attack -rate=10 -duration=60s | vegeta report
 Requests      [total, rate]            600, 10.02
 Duration      [total, attack, wait]    1m0.146191708s, 59.902157s, 244.034708ms
@@ -85,7 +88,7 @@ Success       [ratio]                  66.32%
 Status Codes  [code:count]             0:2021  200:3979  
 Error Set:
 Get http://127.0.0.1:51115/joke: EOF
-
+```
 
 
 
