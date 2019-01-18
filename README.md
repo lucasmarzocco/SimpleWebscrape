@@ -12,13 +12,12 @@ Testing framework: Vegeta
 
 Webserver tool: Swagger
 
-Make sure to have Swagger installed as well as all of the packages required and the apple_proj folder in the SRC folder of your Go installation.
+Make sure to have Swagger installed as well as all of the packages required and the proj folder in the SRC folder of your Go installation.
 
 To run:
 
-1) Be in the main directory (apple_proj).
-2) Start the server (go run cmd/apple-take-home-project-server/main.go)
-	Should see something like: 2019/01/16 19:34:48 Serving apple take home project at http://127.0.0.1:59987
+1) Be in the main directory (proj).
+2) Start the server (go run cmd/simple-web-service-server/main.go)
 3) Take the local server output and add "/joke" (I just decided to have a specific endpoint).
 4) In another window use the curl command:
 	
