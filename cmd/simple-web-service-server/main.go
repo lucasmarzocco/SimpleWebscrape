@@ -6,8 +6,8 @@ import (
 	"log"
 	"os"
 
-	"apple_proj/restapi"
-	"apple_proj/restapi/operations"
+	"proj/restapi"
+	"proj/restapi/operations"
 
 	loads "github.com/go-openapi/loads"
 	flags "github.com/jessevdk/go-flags"
@@ -23,13 +23,13 @@ func main() {
 		log.Fatalln(err)
 	}
 
-	api := operations.NewAppleTakeHomeProjectAPI(swaggerSpec)
+	api := operations.NewSimpleWebServiceAPI(swaggerSpec)
 	server := restapi.NewServer(api)
 	defer server.Shutdown()
 
 	parser := flags.NewParser(server, flags.Default)
-	parser.ShortDescription = "Apple Take Home Project"
-	parser.LongDescription = "Take home project for Apple job"
+	parser.ShortDescription = "SimpleWebService"
+	parser.LongDescription = "Simple web service project"
 
 	server.ConfigureFlags()
 	for _, optsGroup := range api.CommandLineOptionsGroups {

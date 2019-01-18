@@ -68,7 +68,6 @@ func Main() string {
 	//Grabs name from the output
 	name := p.Name
 	surname := p.Surname
-	fmt.Printf("Name: %+v\n", name + " " + surname)
 
 	/**************************************************************/
 
@@ -82,8 +81,6 @@ func Main() string {
 
 	//Grabs joke from the output
 	joke := q.Value.Joke
-	fmt.Printf("Original joke: %+v\n", joke)
-
 
 	//Replaced joke
 	result := strings.Replace(joke, "John Doe", name + " " + surname, -1)

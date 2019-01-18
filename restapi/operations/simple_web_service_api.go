@@ -20,9 +20,9 @@ import (
 	"github.com/go-openapi/swag"
 )
 
-// NewAppleTakeHomeProjectAPI creates a new AppleTakeHomeProject instance
-func NewAppleTakeHomeProjectAPI(spec *loads.Document) *AppleTakeHomeProjectAPI {
-	return &AppleTakeHomeProjectAPI{
+// NewSimpleWebServiceAPI creates a new SimpleWebService instance
+func NewSimpleWebServiceAPI(spec *loads.Document) *SimpleWebServiceAPI {
+	return &SimpleWebServiceAPI{
 		handlers:            make(map[string]map[string]http.Handler),
 		formats:             strfmt.Default,
 		defaultConsumes:     "application/json",
@@ -43,8 +43,8 @@ func NewAppleTakeHomeProjectAPI(spec *loads.Document) *AppleTakeHomeProjectAPI {
 	}
 }
 
-/*AppleTakeHomeProjectAPI Take home project for Apple job */
-type AppleTakeHomeProjectAPI struct {
+/*SimpleWebServiceAPI Simple web service project */
+type SimpleWebServiceAPI struct {
 	spec            *loads.Document
 	context         *middleware.Context
 	handlers        map[string]map[string]http.Handler
@@ -90,42 +90,42 @@ type AppleTakeHomeProjectAPI struct {
 }
 
 // SetDefaultProduces sets the default produces media type
-func (o *AppleTakeHomeProjectAPI) SetDefaultProduces(mediaType string) {
+func (o *SimpleWebServiceAPI) SetDefaultProduces(mediaType string) {
 	o.defaultProduces = mediaType
 }
 
 // SetDefaultConsumes returns the default consumes media type
-func (o *AppleTakeHomeProjectAPI) SetDefaultConsumes(mediaType string) {
+func (o *SimpleWebServiceAPI) SetDefaultConsumes(mediaType string) {
 	o.defaultConsumes = mediaType
 }
 
 // SetSpec sets a spec that will be served for the clients.
-func (o *AppleTakeHomeProjectAPI) SetSpec(spec *loads.Document) {
+func (o *SimpleWebServiceAPI) SetSpec(spec *loads.Document) {
 	o.spec = spec
 }
 
 // DefaultProduces returns the default produces media type
-func (o *AppleTakeHomeProjectAPI) DefaultProduces() string {
+func (o *SimpleWebServiceAPI) DefaultProduces() string {
 	return o.defaultProduces
 }
 
 // DefaultConsumes returns the default consumes media type
-func (o *AppleTakeHomeProjectAPI) DefaultConsumes() string {
+func (o *SimpleWebServiceAPI) DefaultConsumes() string {
 	return o.defaultConsumes
 }
 
 // Formats returns the registered string formats
-func (o *AppleTakeHomeProjectAPI) Formats() strfmt.Registry {
+func (o *SimpleWebServiceAPI) Formats() strfmt.Registry {
 	return o.formats
 }
 
 // RegisterFormat registers a custom format validator
-func (o *AppleTakeHomeProjectAPI) RegisterFormat(name string, format strfmt.Format, validator strfmt.Validator) {
+func (o *SimpleWebServiceAPI) RegisterFormat(name string, format strfmt.Format, validator strfmt.Validator) {
 	o.formats.Add(name, format, validator)
 }
 
-// Validate validates the registrations in the AppleTakeHomeProjectAPI
-func (o *AppleTakeHomeProjectAPI) Validate() error {
+// Validate validates the registrations in the SimpleWebServiceAPI
+func (o *SimpleWebServiceAPI) Validate() error {
 	var unregistered []string
 
 	if o.JSONConsumer == nil {
@@ -148,26 +148,26 @@ func (o *AppleTakeHomeProjectAPI) Validate() error {
 }
 
 // ServeErrorFor gets a error handler for a given operation id
-func (o *AppleTakeHomeProjectAPI) ServeErrorFor(operationID string) func(http.ResponseWriter, *http.Request, error) {
+func (o *SimpleWebServiceAPI) ServeErrorFor(operationID string) func(http.ResponseWriter, *http.Request, error) {
 	return o.ServeError
 }
 
 // AuthenticatorsFor gets the authenticators for the specified security schemes
-func (o *AppleTakeHomeProjectAPI) AuthenticatorsFor(schemes map[string]spec.SecurityScheme) map[string]runtime.Authenticator {
+func (o *SimpleWebServiceAPI) AuthenticatorsFor(schemes map[string]spec.SecurityScheme) map[string]runtime.Authenticator {
 
 	return nil
 
 }
 
 // Authorizer returns the registered authorizer
-func (o *AppleTakeHomeProjectAPI) Authorizer() runtime.Authorizer {
+func (o *SimpleWebServiceAPI) Authorizer() runtime.Authorizer {
 
 	return nil
 
 }
 
 // ConsumersFor gets the consumers for the specified media types
-func (o *AppleTakeHomeProjectAPI) ConsumersFor(mediaTypes []string) map[string]runtime.Consumer {
+func (o *SimpleWebServiceAPI) ConsumersFor(mediaTypes []string) map[string]runtime.Consumer {
 
 	result := make(map[string]runtime.Consumer)
 	for _, mt := range mediaTypes {
@@ -187,7 +187,7 @@ func (o *AppleTakeHomeProjectAPI) ConsumersFor(mediaTypes []string) map[string]r
 }
 
 // ProducersFor gets the producers for the specified media types
-func (o *AppleTakeHomeProjectAPI) ProducersFor(mediaTypes []string) map[string]runtime.Producer {
+func (o *SimpleWebServiceAPI) ProducersFor(mediaTypes []string) map[string]runtime.Producer {
 
 	result := make(map[string]runtime.Producer)
 	for _, mt := range mediaTypes {
@@ -207,7 +207,7 @@ func (o *AppleTakeHomeProjectAPI) ProducersFor(mediaTypes []string) map[string]r
 }
 
 // HandlerFor gets a http.Handler for the provided operation method and path
-func (o *AppleTakeHomeProjectAPI) HandlerFor(method, path string) (http.Handler, bool) {
+func (o *SimpleWebServiceAPI) HandlerFor(method, path string) (http.Handler, bool) {
 	if o.handlers == nil {
 		return nil, false
 	}
@@ -222,8 +222,8 @@ func (o *AppleTakeHomeProjectAPI) HandlerFor(method, path string) (http.Handler,
 	return h, ok
 }
 
-// Context returns the middleware context for the apple take home project API
-func (o *AppleTakeHomeProjectAPI) Context() *middleware.Context {
+// Context returns the middleware context for the simple web service API
+func (o *SimpleWebServiceAPI) Context() *middleware.Context {
 	if o.context == nil {
 		o.context = middleware.NewRoutableContext(o.spec, o, nil)
 	}
@@ -231,7 +231,7 @@ func (o *AppleTakeHomeProjectAPI) Context() *middleware.Context {
 	return o.context
 }
 
-func (o *AppleTakeHomeProjectAPI) initHandlerCache() {
+func (o *SimpleWebServiceAPI) initHandlerCache() {
 	o.Context() // don't care about the result, just that the initialization happened
 
 	if o.handlers == nil {
@@ -247,7 +247,7 @@ func (o *AppleTakeHomeProjectAPI) initHandlerCache() {
 
 // Serve creates a http handler to serve the API over HTTP
 // can be used directly in http.ListenAndServe(":8000", api.Serve(nil))
-func (o *AppleTakeHomeProjectAPI) Serve(builder middleware.Builder) http.Handler {
+func (o *SimpleWebServiceAPI) Serve(builder middleware.Builder) http.Handler {
 	o.Init()
 
 	if o.Middleware != nil {
@@ -257,18 +257,18 @@ func (o *AppleTakeHomeProjectAPI) Serve(builder middleware.Builder) http.Handler
 }
 
 // Init allows you to just initialize the handler cache, you can then recompose the middleware as you see fit
-func (o *AppleTakeHomeProjectAPI) Init() {
+func (o *SimpleWebServiceAPI) Init() {
 	if len(o.handlers) == 0 {
 		o.initHandlerCache()
 	}
 }
 
 // RegisterConsumer allows you to add (or override) a consumer for a media type.
-func (o *AppleTakeHomeProjectAPI) RegisterConsumer(mediaType string, consumer runtime.Consumer) {
+func (o *SimpleWebServiceAPI) RegisterConsumer(mediaType string, consumer runtime.Consumer) {
 	o.customConsumers[mediaType] = consumer
 }
 
 // RegisterProducer allows you to add (or override) a producer for a media type.
-func (o *AppleTakeHomeProjectAPI) RegisterProducer(mediaType string, producer runtime.Producer) {
+func (o *SimpleWebServiceAPI) RegisterProducer(mediaType string, producer runtime.Producer) {
 	o.customProducers[mediaType] = producer
 }

@@ -1,7 +1,7 @@
 swagger: "2.0"
 info:
-  title: Apple Take Home Project
-  description: Take home project for Apple job
+  title: SimpleWebService
+  description: Simple web service project
   version: "0.0.1"
 schemes:
   - http

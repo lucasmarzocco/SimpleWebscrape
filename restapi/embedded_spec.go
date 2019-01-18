@@ -23,8 +23,8 @@ func init() {
   ],
   "swagger": "2.0",
   "info": {
-    "description": "Take home project for Apple job",
-    "title": "Apple Take Home Project",
+    "description": "Simple web service project",
+    "title": "SimpleWebService",
     "version": "0.0.1"
   },
   "paths": {
@@ -50,8 +50,8 @@ func init() {
   ],
   "swagger": "2.0",
   "info": {
-    "description": "Take home project for Apple job",
-    "title": "Apple Take Home Project",
+    "description": "Simple web service project",
+    "title": "SimpleWebService",
     "version": "0.0.1"
   },
   "paths": {

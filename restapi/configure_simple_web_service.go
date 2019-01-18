@@ -10,17 +10,16 @@ import (
 	runtime "github.com/go-openapi/runtime"
 	middleware "github.com/go-openapi/runtime/middleware"
 
-	"apple_proj/restapi/operations"
-	"apple_proj/project"
+	"proj/restapi/operations"
+	"proj/project"
+	
 )
 
-//go:generate swagger generate server --target ../../apple_proj --name AppleTakeHomeProject --spec ../swagger.json
-
-func configureFlags(api *operations.AppleTakeHomeProjectAPI) {
+func configureFlags(api *operations.SimpleWebServiceAPI) {
 	// api.CommandLineOptionsGroups = []swag.CommandLineOptionsGroup{ ... }
 }
 
-func configureAPI(api *operations.AppleTakeHomeProjectAPI) http.Handler {
+func configureAPI(api *operations.SimpleWebServiceAPI) http.Handler {
 	// configure the api here
 	api.ServeError = errors.ServeError
 
