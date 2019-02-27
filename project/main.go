@@ -23,7 +23,7 @@ type Result struct {
 	Contents string
 }
 
-// Return Job title
+// Return Job title - ALL CORNER CASES ARE NOT TAKEN CARE OF
 func getTitleAndLocation(contents string) (string, string) {
 
 	startIndex := strings.Index(contents, "<title>")
@@ -52,6 +52,7 @@ func getTitleAndLocation(contents string) (string, string) {
 
 	lastChar := location[len(location)-1]
 
+	// Remove ZIP code
 	if unicode.IsDigit(rune(lastChar)) {
 		
 		// Take care of stripping the zip code if need to
@@ -85,6 +86,7 @@ func get(link string, ch chan<-Result) {
 	response, _ := http.Get(link)
 	contents, _ := ioutil.ReadAll(response.Body)
 	
+	// Send all the data over the channel
 	result := Result {
 		Url: link,
 		Contents: string(contents),
@@ -97,9 +99,7 @@ func get(link string, ch chan<-Result) {
 func GetAllJobs(vals []string) []*JobListing {
 
 	start := time.Now()
-
 	var list []*JobListing
-
 	ch := make(chan Result)
 
 	for _, element := range vals {

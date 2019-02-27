@@ -1,5 +1,6 @@
 import json
 
+#Mini file to convert a file of URLs to a list to pass into Postman
 def convertToArray():
 
 	arr = []
