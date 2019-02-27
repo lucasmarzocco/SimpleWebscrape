@@ -4,9 +4,9 @@ import (
 	"fmt"
 	"net/http"
 	"io/ioutil"
-	"os"
 	"strings"
 	"unicode"
+	"time"
 )
 
 // Struct to hold all of the information being returned
@@ -15,6 +15,12 @@ type JobListing struct {
 	Location string `json:"location"`
 	Company string `json:"company"`
 	Url string `json:"url"`
+}
+
+// Struct to pass around the channels
+type Result struct {
+	Url string
+	Contents string
 }
 
 // Return Job title
@@ -33,6 +39,17 @@ func getTitleAndLocation(contents string) (string, string) {
 
 	// Grab only the location
 	location  := strings.TrimSpace(jobAndLocation[1])
+
+	// Deals with the case when there's a - in the job title (Ex: Software Engineer - iOS Devices)
+	if len(jobAndLocation) > 3 {
+
+		newJob := strings.TrimSpace(jobAndLocation[0] + " - " + jobAndLocation[1])
+		newLocation := strings.TrimSpace(jobAndLocation[2])
+
+		job = newJob
+		location = newLocation
+	}
+
 	lastChar := location[len(location)-1]
 
 	if unicode.IsDigit(rune(lastChar)) {
@@ -61,52 +78,52 @@ func getCompany(contents string) string {
 	company := strings.TrimSpace(contents[test:testEnd])
 
 	return company
-
 }
 
 // HTTP GET
-func get(link string) string {
-	response, err := http.Get(link)
-	if err != nil {
-		fmt.Println("%s", err)
-		os.Exit(1)
-
-	}else {
-
-		defer response.Body.Close()
-		contents, err := ioutil.ReadAll(response.Body)
-
-		if err != nil {
-			fmt.Printf("%s", err)
-			os.Exit(1)
-		}
-
-		return string(contents)
+func get(link string, ch chan<-Result) {
+	response, _ := http.Get(link)
+	contents, _ := ioutil.ReadAll(response.Body)
+	
+	result := Result {
+		Url: link,
+		Contents: string(contents),
 	}
-	return ""
+
+	ch <- result
 }
 
 // Does all the heavy lifting
 func GetAllJobs(vals []string) []*JobListing {
 
+	start := time.Now()
+
 	var list []*JobListing
 
-	for _, element := range vals {
+	ch := make(chan Result)
 
-		contents := get(string(element))
-		job, location := getTitleAndLocation(contents)
-		company := getCompany(contents)
+	for _, element := range vals {
+		go get(element, ch)
+	}
+
+	for range vals {
+
+		val := <-ch
+
+		job, location := getTitleAndLocation(val.Contents)
+		company := getCompany(val.Contents)
 
 		jobPosting := &JobListing {
 			Title: job,
 			Location: location,
 			Company: company,
-			Url: string(element),
+			Url: val.Url,
 		}
 
- 
 		list = append(list, jobPosting)
 	}
 
+	elapsed := time.Since(start)
+	fmt.Printf("Completed in: %s", elapsed)
 	return list
 }
