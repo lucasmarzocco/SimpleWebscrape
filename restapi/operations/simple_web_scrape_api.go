@@ -20,9 +20,9 @@ import (
 	"github.com/go-openapi/swag"
 )
 
-// NewSimpleWebServiceAPI creates a new SimpleWebService instance
-func NewSimpleWebServiceAPI(spec *loads.Document) *SimpleWebServiceAPI {
-	return &SimpleWebServiceAPI{
+// NewSimpleWebScrapeAPI creates a new SimpleWebScrape instance
+func NewSimpleWebScrapeAPI(spec *loads.Document) *SimpleWebScrapeAPI {
+	return &SimpleWebScrapeAPI{
 		handlers:            make(map[string]map[string]http.Handler),
 		formats:             strfmt.Default,
 		defaultConsumes:     "application/json",
@@ -37,14 +37,14 @@ func NewSimpleWebServiceAPI(spec *loads.Document) *SimpleWebServiceAPI {
 		BearerAuthenticator: security.BearerAuth,
 		JSONConsumer:        runtime.JSONConsumer(),
 		JSONProducer:        runtime.JSONProducer(),
-		GetJokeHandler: GetJokeHandlerFunc(func(params GetJokeParams) middleware.Responder {
-			return middleware.NotImplemented("operation GetJoke has not yet been implemented")
+		PostGetJobsHandler: PostGetJobsHandlerFunc(func(params PostGetJobsParams) middleware.Responder {
+			return middleware.NotImplemented("operation PostGetJobs has not yet been implemented")
 		}),
 	}
 }
 
-/*SimpleWebServiceAPI Simple web service project */
-type SimpleWebServiceAPI struct {
+/*SimpleWebScrapeAPI Simple web scraper project */
+type SimpleWebScrapeAPI struct {
 	spec            *loads.Document
 	context         *middleware.Context
 	handlers        map[string]map[string]http.Handler
@@ -71,8 +71,8 @@ type SimpleWebServiceAPI struct {
 	// JSONProducer registers a producer for a "application/json" mime type
 	JSONProducer runtime.Producer
 
-	// GetJokeHandler sets the operation handler for the get joke operation
-	GetJokeHandler GetJokeHandler
+	// PostGetJobsHandler sets the operation handler for the post get jobs operation
+	PostGetJobsHandler PostGetJobsHandler
 
 	// ServeError is called when an error is received, there is a default handler
 	// but you can set your own with this
@@ -90,42 +90,42 @@ type SimpleWebServiceAPI struct {
 }
 
 // SetDefaultProduces sets the default produces media type
-func (o *SimpleWebServiceAPI) SetDefaultProduces(mediaType string) {
+func (o *SimpleWebScrapeAPI) SetDefaultProduces(mediaType string) {
 	o.defaultProduces = mediaType
 }
 
 // SetDefaultConsumes returns the default consumes media type
-func (o *SimpleWebServiceAPI) SetDefaultConsumes(mediaType string) {
+func (o *SimpleWebScrapeAPI) SetDefaultConsumes(mediaType string) {
 	o.defaultConsumes = mediaType
 }
 
 // SetSpec sets a spec that will be served for the clients.
-func (o *SimpleWebServiceAPI) SetSpec(spec *loads.Document) {
+func (o *SimpleWebScrapeAPI) SetSpec(spec *loads.Document) {
 	o.spec = spec
 }
 
 // DefaultProduces returns the default produces media type
-func (o *SimpleWebServiceAPI) DefaultProduces() string {
+func (o *SimpleWebScrapeAPI) DefaultProduces() string {
 	return o.defaultProduces
 }
 
 // DefaultConsumes returns the default consumes media type
-func (o *SimpleWebServiceAPI) DefaultConsumes() string {
+func (o *SimpleWebScrapeAPI) DefaultConsumes() string {
 	return o.defaultConsumes
 }
 
 // Formats returns the registered string formats
-func (o *SimpleWebServiceAPI) Formats() strfmt.Registry {
+func (o *SimpleWebScrapeAPI) Formats() strfmt.Registry {
 	return o.formats
 }
 
 // RegisterFormat registers a custom format validator
-func (o *SimpleWebServiceAPI) RegisterFormat(name string, format strfmt.Format, validator strfmt.Validator) {
+func (o *SimpleWebScrapeAPI) RegisterFormat(name string, format strfmt.Format, validator strfmt.Validator) {
 	o.formats.Add(name, format, validator)
 }
 
-// Validate validates the registrations in the SimpleWebServiceAPI
-func (o *SimpleWebServiceAPI) Validate() error {
+// Validate validates the registrations in the SimpleWebScrapeAPI
+func (o *SimpleWebScrapeAPI) Validate() error {
 	var unregistered []string
 
 	if o.JSONConsumer == nil {
@@ -136,8 +136,8 @@ func (o *SimpleWebServiceAPI) Validate() error {
 		unregistered = append(unregistered, "JSONProducer")
 	}
 
-	if o.GetJokeHandler == nil {
-		unregistered = append(unregistered, "GetJokeHandler")
+	if o.PostGetJobsHandler == nil {
+		unregistered = append(unregistered, "PostGetJobsHandler")
 	}
 
 	if len(unregistered) > 0 {
@@ -148,26 +148,26 @@ func (o *SimpleWebServiceAPI) Validate() error {
 }
 
 // ServeErrorFor gets a error handler for a given operation id
-func (o *SimpleWebServiceAPI) ServeErrorFor(operationID string) func(http.ResponseWriter, *http.Request, error) {
+func (o *SimpleWebScrapeAPI) ServeErrorFor(operationID string) func(http.ResponseWriter, *http.Request, error) {
 	return o.ServeError
 }
 
 // AuthenticatorsFor gets the authenticators for the specified security schemes
-func (o *SimpleWebServiceAPI) AuthenticatorsFor(schemes map[string]spec.SecurityScheme) map[string]runtime.Authenticator {
+func (o *SimpleWebScrapeAPI) AuthenticatorsFor(schemes map[string]spec.SecurityScheme) map[string]runtime.Authenticator {
 
 	return nil
 
 }
 
 // Authorizer returns the registered authorizer
-func (o *SimpleWebServiceAPI) Authorizer() runtime.Authorizer {
+func (o *SimpleWebScrapeAPI) Authorizer() runtime.Authorizer {
 
 	return nil
 
 }
 
 // ConsumersFor gets the consumers for the specified media types
-func (o *SimpleWebServiceAPI) ConsumersFor(mediaTypes []string) map[string]runtime.Consumer {
+func (o *SimpleWebScrapeAPI) ConsumersFor(mediaTypes []string) map[string]runtime.Consumer {
 
 	result := make(map[string]runtime.Consumer)
 	for _, mt := range mediaTypes {
@@ -187,7 +187,7 @@ func (o *SimpleWebServiceAPI) ConsumersFor(mediaTypes []string) map[string]runti
 }
 
 // ProducersFor gets the producers for the specified media types
-func (o *SimpleWebServiceAPI) ProducersFor(mediaTypes []string) map[string]runtime.Producer {
+func (o *SimpleWebScrapeAPI) ProducersFor(mediaTypes []string) map[string]runtime.Producer {
 
 	result := make(map[string]runtime.Producer)
 	for _, mt := range mediaTypes {
@@ -207,7 +207,7 @@ func (o *SimpleWebServiceAPI) ProducersFor(mediaTypes []string) map[string]runti
 }
 
 // HandlerFor gets a http.Handler for the provided operation method and path
-func (o *SimpleWebServiceAPI) HandlerFor(method, path string) (http.Handler, bool) {
+func (o *SimpleWebScrapeAPI) HandlerFor(method, path string) (http.Handler, bool) {
 	if o.handlers == nil {
 		return nil, false
 	}
@@ -222,8 +222,8 @@ func (o *SimpleWebServiceAPI) HandlerFor(method, path string) (http.Handler, boo
 	return h, ok
 }
 
-// Context returns the middleware context for the simple web service API
-func (o *SimpleWebServiceAPI) Context() *middleware.Context {
+// Context returns the middleware context for the simple web scrape API
+func (o *SimpleWebScrapeAPI) Context() *middleware.Context {
 	if o.context == nil {
 		o.context = middleware.NewRoutableContext(o.spec, o, nil)
 	}
@@ -231,23 +231,23 @@ func (o *SimpleWebServiceAPI) Context() *middleware.Context {
 	return o.context
 }
 
-func (o *SimpleWebServiceAPI) initHandlerCache() {
+func (o *SimpleWebScrapeAPI) initHandlerCache() {
 	o.Context() // don't care about the result, just that the initialization happened
 
 	if o.handlers == nil {
 		o.handlers = make(map[string]map[string]http.Handler)
 	}
 
-	if o.handlers["GET"] == nil {
-		o.handlers["GET"] = make(map[string]http.Handler)
+	if o.handlers["POST"] == nil {
+		o.handlers["POST"] = make(map[string]http.Handler)
 	}
-	o.handlers["GET"]["/joke"] = NewGetJoke(o.context, o.GetJokeHandler)
+	o.handlers["POST"]["/get_jobs"] = NewPostGetJobs(o.context, o.PostGetJobsHandler)
 
 }
 
 // Serve creates a http handler to serve the API over HTTP
 // can be used directly in http.ListenAndServe(":8000", api.Serve(nil))
-func (o *SimpleWebServiceAPI) Serve(builder middleware.Builder) http.Handler {
+func (o *SimpleWebScrapeAPI) Serve(builder middleware.Builder) http.Handler {
 	o.Init()
 
 	if o.Middleware != nil {
@@ -257,18 +257,18 @@ func (o *SimpleWebServiceAPI) Serve(builder middleware.Builder) http.Handler {
 }
 
 // Init allows you to just initialize the handler cache, you can then recompose the middleware as you see fit
-func (o *SimpleWebServiceAPI) Init() {
+func (o *SimpleWebScrapeAPI) Init() {
 	if len(o.handlers) == 0 {
 		o.initHandlerCache()
 	}
 }
 
 // RegisterConsumer allows you to add (or override) a consumer for a media type.
-func (o *SimpleWebServiceAPI) RegisterConsumer(mediaType string, consumer runtime.Consumer) {
+func (o *SimpleWebScrapeAPI) RegisterConsumer(mediaType string, consumer runtime.Consumer) {
 	o.customConsumers[mediaType] = consumer
 }
 
 // RegisterProducer allows you to add (or override) a producer for a media type.
-func (o *SimpleWebServiceAPI) RegisterProducer(mediaType string, producer runtime.Producer) {
+func (o *SimpleWebScrapeAPI) RegisterProducer(mediaType string, producer runtime.Producer) {
 	o.customProducers[mediaType] = producer
 }

@@ -10,16 +10,18 @@ import (
 	runtime "github.com/go-openapi/runtime"
 	middleware "github.com/go-openapi/runtime/middleware"
 
-	"proj/restapi/operations"
-	"proj/project"
-	
+	"webscraper/restapi/operations"
+	"webscraper/project"
+	"webscraper/models"
 )
 
-func configureFlags(api *operations.SimpleWebServiceAPI) {
+//go:generate swagger generate server --target ../../webscraper --name SimpleWebScrape --spec ../swagger.json
+
+func configureFlags(api *operations.SimpleWebScrapeAPI) {
 	// api.CommandLineOptionsGroups = []swag.CommandLineOptionsGroup{ ... }
 }
 
-func configureAPI(api *operations.SimpleWebServiceAPI) http.Handler {
+func configureAPI(api *operations.SimpleWebScrapeAPI) http.Handler {
 	// configure the api here
 	api.ServeError = errors.ServeError
 
@@ -33,12 +35,34 @@ func configureAPI(api *operations.SimpleWebServiceAPI) http.Handler {
 
 	api.JSONProducer = runtime.JSONProducer()
 
-	api.GetJokeHandler = operations.GetJokeHandlerFunc(
-		func(params operations.GetJokeParams) middleware.Responder {
+	api.PostGetJobsHandler = operations.PostGetJobsHandlerFunc(
 
-			response := project.Main()
-			return operations.NewGetJokeOK().WithPayload(response)
+		func(params operations.PostGetJobsParams) middleware.Responder {
+
+		// Input list of URLs
+		list := params.ListOfUrls
+
+		// Get response from my function
+		response := project.GetAllJobs(list)
+
+		// List to hold all of the passed objects
+		var struc []*models.SuccessItems0
+
+		for _, element := range response {
+
+			item := &models.SuccessItems0 {
+				Title: element.Title,
+				Location: element.Location,
+				Company: element.Company,
+				URL: element.Url,
+			}
+
+			struc = append(struc, item)
+		}
+
+		return operations.NewPostGetJobsOK().WithPayload(struc)
 	})
+
 
 	api.ServerShutdown = func() {}
 

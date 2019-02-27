@@ -6,8 +6,8 @@ import (
 	"log"
 	"os"
 
-	"proj/restapi"
-	"proj/restapi/operations"
+	"webscraper/restapi"
+	"webscraper/restapi/operations"
 
 	loads "github.com/go-openapi/loads"
 	flags "github.com/jessevdk/go-flags"
@@ -23,13 +23,13 @@ func main() {
 		log.Fatalln(err)
 	}
 
-	api := operations.NewSimpleWebServiceAPI(swaggerSpec)
+	api := operations.NewSimpleWebScrapeAPI(swaggerSpec)
 	server := restapi.NewServer(api)
 	defer server.Shutdown()
 
 	parser := flags.NewParser(server, flags.Default)
-	parser.ShortDescription = "SimpleWebService"
-	parser.LongDescription = "Simple web service project"
+	parser.ShortDescription = "SimpleWebScrape"
+	parser.LongDescription = "Simple web scraper project"
 
 	server.ConfigureFlags()
 	for _, optsGroup := range api.CommandLineOptionsGroups {

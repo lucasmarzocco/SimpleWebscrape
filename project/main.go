@@ -5,37 +5,74 @@ import (
 	"net/http"
 	"io/ioutil"
 	"os"
-	"encoding/json"
 	"strings"
+	"unicode"
 )
 
-//Struct to store the result of fetching a name
-type Name struct {
-	Name string
-	Surname string
-	Gender string
-	Region string
+// Struct to hold all of the information being returned
+type JobListing struct {
+	Title string `json:"title"`
+	Location string `json:"location"`
+	Company string `json:"company"`
+	Url string `json:"url"`
 }
 
-//Struct to store the result of fetching a joke
-type ChuckNorris struct {
-	Type string
-	Value struct {
-		Id int
-		Joke string
-		Categories []string
+// Return Job title
+func getTitleAndLocation(contents string) (string, string) {
+
+	startIndex := strings.Index(contents, "<title>")
+
+	// Amount of chars in <title>
+	startIndex += 7
+	endIndex := strings.Index(contents, "</title>")
+
+	jobAndLocation := strings.Split(contents[startIndex:endIndex], "-")
+
+	// Grab only the job
+	job := strings.TrimSpace(jobAndLocation[0])
+
+	// Grab only the location
+	location  := strings.TrimSpace(jobAndLocation[1])
+	lastChar := location[len(location)-1]
+
+	if unicode.IsDigit(rune(lastChar)) {
+		
+		// Take care of stripping the zip code if need to
+		newLocation := location[0:len(location)-6]
+		location = newLocation
 	}
+
+	return job, location
 }
 
-//HTTP get to retrieve the data from the given links
-func get(link string) []byte {
+// Return company
+func getCompany(contents string) string {
 
+	test := strings.Index(contents, "Get job updates from")
+
+	// Amount of chars to add to reach end of string
+	test += 21
+
+	testEnd := strings.Index(contents, "duplicateEmailMessage")
+
+	// Weird amount of number to backtrack, but it reaches the end of the company name
+	testEnd -= 3
+
+	company := strings.TrimSpace(contents[test:testEnd])
+
+	return company
+
+}
+
+// HTTP GET
+func get(link string) string {
 	response, err := http.Get(link)
-
 	if err != nil {
 		fmt.Println("%s", err)
 		os.Exit(1)
+
 	}else {
+
 		defer response.Body.Close()
 		contents, err := ioutil.ReadAll(response.Body)
 
@@ -44,46 +81,32 @@ func get(link string) []byte {
 			os.Exit(1)
 		}
 
-		return contents
+		return string(contents)
 	}
-
-	slice := make([]byte, 0)
-	return slice
+	return ""
 }
 
-//Main method, does all the heavy lifting
-func Main() string {
+// Does all the heavy lifting
+func GetAllJobs(vals []string) []*JobListing {
 
-	names := "http://uinames.com/api/"
-	chuck_norris := "http://api.icndb.com/jokes/random?firstName=John&lastName=Doe&limitTo=[nerdy]"
+	var list []*JobListing
 
-	name_input := get(names)
-	var p Name
-	err := json.Unmarshal(name_input, &p)
+	for _, element := range vals {
 
-	if err != nil {
-		panic(err)
+		contents := get(string(element))
+		job, location := getTitleAndLocation(contents)
+		company := getCompany(contents)
+
+		jobPosting := &JobListing {
+			Title: job,
+			Location: location,
+			Company: company,
+			Url: string(element),
+		}
+
+ 
+		list = append(list, jobPosting)
 	}
 
-	//Grabs name from the output
-	name := p.Name
-	surname := p.Surname
-
-	/**************************************************************/
-
-	joke_input := get(chuck_norris)
-	var q ChuckNorris
-	err1 := json.Unmarshal(joke_input, &q)
-
-	if err1 != nil {
-		panic(err1)
-	}
-
-	//Grabs joke from the output
-	joke := q.Value.Joke
-
-	//Replaced joke
-	result := strings.Replace(joke, "John Doe", name + " " + surname, -1)
-	return result + "."
-	/**************************************************************/
+	return list
 }

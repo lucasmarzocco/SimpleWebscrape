@@ -23,21 +23,63 @@ func init() {
   ],
   "swagger": "2.0",
   "info": {
-    "description": "Simple web service project",
-    "title": "SimpleWebService",
+    "description": "Simple web scraper project",
+    "title": "SimpleWebScrape",
     "version": "0.0.1"
   },
   "paths": {
-    "/joke": {
-      "get": {
-        "description": "Get a newly made joke",
-        "summary": "Get a newly made joke",
+    "/get_jobs": {
+      "post": {
+        "description": "Obtain information about jobs from Indeed",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "summary": "Obtain information about jobs from Indeed",
+        "parameters": [
+          {
+            "description": "List of URLs to obtain info from",
+            "name": "ListOfURLs",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        ],
         "responses": {
           "200": {
-            "description": "A new joke with a new name",
+            "description": "OK",
             "schema": {
-              "type": "string"
+              "$ref": "#/definitions/Success"
             }
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "Success": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "company": {
+            "type": "string"
+          },
+          "location": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "url": {
+            "type": "string"
           }
         }
       }
@@ -50,21 +92,63 @@ func init() {
   ],
   "swagger": "2.0",
   "info": {
-    "description": "Simple web service project",
-    "title": "SimpleWebService",
+    "description": "Simple web scraper project",
+    "title": "SimpleWebScrape",
     "version": "0.0.1"
   },
   "paths": {
-    "/joke": {
-      "get": {
-        "description": "Get a newly made joke",
-        "summary": "Get a newly made joke",
+    "/get_jobs": {
+      "post": {
+        "description": "Obtain information about jobs from Indeed",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "summary": "Obtain information about jobs from Indeed",
+        "parameters": [
+          {
+            "description": "List of URLs to obtain info from",
+            "name": "ListOfURLs",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        ],
         "responses": {
           "200": {
-            "description": "A new joke with a new name",
+            "description": "OK",
             "schema": {
-              "type": "string"
+              "$ref": "#/definitions/Success"
             }
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "Success": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "company": {
+            "type": "string"
+          },
+          "location": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "url": {
+            "type": "string"
           }
         }
       }
