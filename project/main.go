@@ -31,25 +31,43 @@ func getTitleAndLocation(contents string) (string, string) {
 	// Amount of chars in <title>
 	startIndex += 7
 	endIndex := strings.Index(contents, "</title>")
-
+               
 	jobAndLocation := strings.Split(contents[startIndex:endIndex], "-")
 
-	// Grab only the job
-	job := strings.TrimSpace(jobAndLocation[0])
+	length := len(jobAndLocation)
 
-	// Grab only the location
-	location  := strings.TrimSpace(jobAndLocation[1])
+	fmt.Println(length)
+	fmt.Println(jobAndLocation)
 
-	// Deals with the case when there's a - in the job title (Ex: Software Engineer - iOS Devices)
-	if len(jobAndLocation) > 3 {
+	job := ""
+	location := ""
 
-		newJob := strings.TrimSpace(jobAndLocation[0] + " - " + jobAndLocation[1])
-		newLocation := strings.TrimSpace(jobAndLocation[2])
+	// Special number of dash-delimited items when checking for job/location
+	if length == 3 {
 
-		job = newJob
-		location = newLocation
+		// Grab only the job
+		job = strings.TrimSpace(jobAndLocation[0])
+
+		// Grab only the location
+		location = strings.TrimSpace(jobAndLocation[1])
+
+	}else {
+
+		for i := 0; i <= (length - 3); i++ {
+
+			job += strings.TrimSpace(jobAndLocation[i])
+
+			if i != (length - 3) {
+
+				job += " - "
+			}
+		}
+
+		// Location will always be the second to last item in the array
+		location = strings.TrimSpace(jobAndLocation[length-2])
 	}
 
+	// CHecking last char for a number
 	lastChar := location[len(location)-1]
 
 	// Remove ZIP code
@@ -84,6 +102,7 @@ func getCompany(contents string) string {
 // HTTP GET
 func get(link string, ch chan<-Result) {
 	response, _ := http.Get(link)
+	defer response.Body.Close()
 	contents, _ := ioutil.ReadAll(response.Body)
 	
 	// Send all the data over the channel
